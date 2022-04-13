@@ -1,0 +1,13 @@
+.DS_Store
+.idea
+.vscode
+.titan
+dist
+/dist
+node_modules
+package-lock.json
+/syncCode
+syncCode
+*.zip
+/*/miniprogram_npm
+/**/miniprogram_npm
