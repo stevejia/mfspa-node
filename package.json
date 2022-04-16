@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon"
+    "start": "nodemon",
+    "build": "tsc --outDir ./dist ./src/index.ts",
+    "serve": "node ./dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -24,24 +26,16 @@
     "mysql": "^2.18.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.9",
-    "@babel/plugin-proposal-class-properties": "^7.16.7",
-    "@babel/plugin-transform-runtime": "^7.17.0",
-    "@babel/preset-env": "^7.16.11",
-    "@babel/preset-es2015": "^7.0.0-beta.53",
-    "@babel/preset-typescript": "^7.16.7",
-    "@babel/runtime": "^7.17.9",
     "@types/express": "^4.17.13",
     "@types/mime": "^2.0.3",
+    "@types/multiparty": "0.0.33",
     "@types/mysql": "^2.15.21",
     "@types/node": "^17.0.23",
-    "babel-loader": "^8.2.4",
+    "compressing": "^1.5.1",
+    "jszip": "^3.9.1",
+    "multiparty": "^4.2.3",
     "nodemon": "^2.0.15",
-    "ts-loader": "^9.2.8",
     "ts-node": "^10.7.0",
-    "typescript": "^4.6.3",
-    "webpack": "^5.72.0",
-    "webpack-cli": "^4.9.2",
-    "zlib": "^1.0.5"
+    "typescript": "^4.6.3"
   }
 }
