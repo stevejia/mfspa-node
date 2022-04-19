@@ -1,7 +1,7 @@
 interface AppInfoModel {
   appId?: number | null;
   appName?: string;
-  appVersion?: string;
+  url?: string;
 }
 
 export default AppInfoModel;

@@ -1,6 +1,7 @@
 import Mapper, {
   Condition,
   ConditionalQuery,
+  SQL_OPERATOR,
 } from "../../mysql/libs/mapper/mapper";
 import DebugInfoModel from "./model";
 import DebugInfoQuery from "./query";
@@ -18,7 +19,14 @@ class DebugInfoService extends Mapper<DebugInfoModel> {
   }
 
   async addDebugInfo(debugInfo: DebugInfoModel | Array<DebugInfoModel>) {
-    await this.insert(debugInfo);
+    await this.insertOrUpdate(debugInfo);
+  }
+  async deleteDebugInfo(query: DebugInfoModel) {
+    const conditionQuery = new ConditionalQuery();
+    conditionQuery.addCondition("appName", Condition.Equals, query?.appName);
+    await this.query(
+      conditionQuery.getQueryString(this.tableName, SQL_OPERATOR.DELETE)
+    );
   }
 }
 

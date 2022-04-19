@@ -13,15 +13,15 @@ class Mapper<T> extends Transaction {
     console.log(result);
     return result;
   }
-  async insert(item: T | Array<T>) {
+  async insertOrUpdate(item: T | Array<T>) {
     const insertItems = !(item instanceof Array) ? [item] : item;
-    const insertQuery = this.getInsertQueryString(insertItems, this.tableName);
+    const insertQuery = this.getInsUpdateString(insertItems, this.tableName);
     console.log(insertQuery);
     const result = await this.begin("query", ...insertQuery);
     console.log(result);
   }
 
-  getInsertQueryString(insertItems: Array<T>, tableName: string) {
+  getInsUpdateString(insertItems: Array<T>, tableName: string) {
     //获取属性名称
     let keys: string[] = [];
     let values: Array<Array<any>> = [];
@@ -50,8 +50,11 @@ class Mapper<T> extends Transaction {
     return [queryString, [values]];
   }
 
-  async update() {}
-  async delete() {}
+  async delete(queryString: string) {
+    console.log(queryString);
+    const result = await this.begin("query", queryString);
+    console.log(result);
+  }
 }
 
 interface ConditionalQueryModel {
@@ -74,21 +77,29 @@ class ConditionalQuery implements ConditionalQueryModel {
     if (value.length > 1) {
       this.conditions.push(new ConditionalItem(key, operator, value));
     } else {
-      const val = value?.[0];
+      let val = value?.[0];
       if (!isNullOrEmpty(val)) {
-        this.conditions.push(new ConditionalItem(key, operator, value[0]));
+        if (typeof val === "string") {
+          val = `'${val}'`;
+        }
+        this.conditions.push(new ConditionalItem(key, operator, val));
       }
     }
   }
 
-  getQueryString(tableName: string) {
+  getQueryString(tableName: string, operator = SQL_OPERATOR.QUERY) {
+    //默认查询
     let queryStr = `select * from ${tableName}`;
+    //如果是删除动作
+    if (operator === SQL_OPERATOR.DELETE) {
+      queryStr = `delete from ${tableName}`;
+    }
     const conditionsArr: string[] = [];
     this.conditions.forEach((condition) => {
       conditionsArr.push(this.getConditionString(condition));
     });
     if (conditionsArr.length > 0) {
-      queryStr += ` where ${conditionsArr.join("and")}`;
+      queryStr += ` where ${conditionsArr.join(" and ")}`;
     }
     return queryStr;
   }
@@ -173,4 +184,9 @@ enum Condition {
   IsNotEmpty = 23,
 }
 
-export { ConditionalQuery, Condition };
+enum SQL_OPERATOR {
+  QUERY = 1,
+  DELETE = 2,
+}
+
+export { ConditionalQuery, Condition, SQL_OPERATOR };

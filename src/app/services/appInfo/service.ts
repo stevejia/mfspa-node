@@ -9,7 +9,9 @@ class AppInfoService extends Mapper<AppInfoModel> {
   constructor(table_name: string) {
     super(table_name);
   }
-  async queryAppInfo(query: AppInfoQuery = { currentUsed: 1 }) {
+  async queryAppInfo(
+    query: AppInfoQuery = { currentUsed: 1 }
+  ): Promise<Array<AppInfoModel>> {
     const conditionQuery = new ConditionalQuery();
     conditionQuery.addCondition("appId", Condition.Equals, query?.appId);
     conditionQuery.addCondition("appName", Condition.Equals, query?.appName);
@@ -25,11 +27,15 @@ class AppInfoService extends Mapper<AppInfoModel> {
     );
 
     debugger;
-    await this.query(conditionQuery.getQueryString(this.tableName));
+    const result = await this.query(
+      conditionQuery.getQueryString(this.tableName)
+    );
+    return result;
   }
 
-  async addAppInfo(appInfo: AppInfoModel | Array<AppInfoModel>) {
-    await this.insert(appInfo);
+  async getAppInfo(query: AppInfoQuery = { currentUsed: 1 }) {
+    const results = await this.queryAppInfo(query);
+    return results?.[0] || null;
   }
 }
 
