@@ -1,22 +1,22 @@
 import { Router } from "express";
 
-import { debugInfoService } from "../services";
+import { groupInfoService } from "../services";
 import jsonResult from "./utils/result";
 const url = require("url");
 const router = Router();
 router.get("/get", async (req, res) => {
-  const debugInfo = await debugInfoService.queryDebugInfo();
-  res.send(jsonResult({ debugInfo }));
+  const groupInfo = await groupInfoService.queryGroupInfo();
+  res.send(jsonResult({ groupInfo }));
 });
 router.delete("/delete", async (req, res) => {
-  let { query: debugInfo } = url.parse(req.url, true);
-  await debugInfoService.deleteDebugInfo(debugInfo);
+  let { query: groupInfo } = url.parse(req.url, true);
+  await groupInfoService.deleteGroupInfo(groupInfo);
   res.send(jsonResult());
 });
 
 router.post("/update", async (req, res) => {
-  const debugInfo = req.body;
-  await debugInfoService.insertOrUpdate(debugInfo);
+  const groupInfo = req.body;
+  await groupInfoService.insertOrUpdate(groupInfo);
   res.send(jsonResult());
 });
 

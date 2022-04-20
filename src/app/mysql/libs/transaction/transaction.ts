@@ -20,10 +20,12 @@ class Transaction extends Connection {
       const commitFunc = this.promisify("commit", connection);
 
       await commitFunc();
+      this.releaseConnection();
       return result;
     } catch (error) {
       const rollbackFunc = this.promisify("rollback", connection);
-      rollbackFunc();
+      await rollbackFunc();
+      this.releaseConnection();
       throw error;
     }
   }

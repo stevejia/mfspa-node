@@ -1,6 +1,7 @@
 // import compressing from "compressing";
 const compressing = require("compressing");
 import { Router } from "express";
+import jsonResult from "./utils/result";
 // import fs from "fs";
 const fs = require("fs");
 // import multiparty from "multiparty";
@@ -40,7 +41,7 @@ const upload = (req: any, res: any, override: boolean = false) => {
     compressing.zip.uncompress(bufferStream, absolutePath, function () {
       console.log("uncompress success");
     });
-    res.send("upload succesfully");
+    res.send(jsonResult());
   });
 };
 

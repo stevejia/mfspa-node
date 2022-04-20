@@ -26,7 +26,6 @@ class AppInfoService extends Mapper<AppInfoModel> {
       query?.currentUsed
     );
 
-    debugger;
     const result = await this.query(
       conditionQuery.getQueryString(this.tableName)
     );
