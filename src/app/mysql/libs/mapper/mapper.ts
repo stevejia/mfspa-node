@@ -13,9 +13,12 @@ class Mapper<T> extends Transaction {
     console.log(result);
     return result;
   }
-  async insertOrUpdate(item: T | Array<T>) {
+  async insertOrUpdate(item: T | Array<T>, tableName?: string) {
     const insertItems = !(item instanceof Array) ? [item] : item;
-    const insertQuery = this.getInsUpdateString(insertItems, this.tableName);
+    const insertQuery = this.getInsUpdateString(
+      insertItems,
+      tableName || this.tableName
+    );
     console.log(insertQuery);
     const result = await this.begin("query", ...insertQuery);
     console.log(result);
@@ -28,20 +31,8 @@ class Mapper<T> extends Transaction {
     insertItems.map((item: T) => {
       keys = Object.keys(item);
       let itemValues = Object.values(item);
-      // itemValues = itemValues?.map((iVal) => {
-      //   return isNullOrEmpty(iVal) ? "null" : iVal;
-      // });
-
       values.push(itemValues);
     });
-    // const valuesStr = values
-    //   .map((value: Array<any>) => `(${value.join(", ")})`)
-    //   .join(", ");
-    // const queryString = `insert into ${tableName}(${keys.join(
-    //   ","
-    // )}) values ${valuesStr} on duplicate key update ${keys
-    //   .map((key) => `${key} = values(${key})`)
-    //   .join(", ")} `;
     const queryString = `insert into ${tableName}(${keys.join(
       ","
     )}) values ? on duplicate key update ${keys
