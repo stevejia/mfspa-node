@@ -13,7 +13,9 @@ router.get("/get", async (req, res) => {
 });
 router.post("/update", async (req, res) => {
   const appInfo = req.body;
-  await appInfoService.insertOrUpdate(appInfo);
+  await appInfoService.insertOrUpdate(appInfo).catch((reason: any) => {
+    res.send(reason);
+  });
   res.send(jsonResult(null, null, 0));
 });
 

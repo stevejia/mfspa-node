@@ -44,7 +44,7 @@
     "@types/node": "^17.0.23",
     "async_hooks": "^1.0.0",
     "babel-loader": "^8.2.5",
-    "compressing": "^1.5.1",
+    "compressing": "^1.6.2",
     "concurrently": "^7.1.0",
     "form-data": "^4.0.0",
     "fs": "0.0.1-security",
