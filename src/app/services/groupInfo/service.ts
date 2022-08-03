@@ -11,8 +11,13 @@ class GroupInfoService extends Mapper<GroupInfoModel> {
   }
   async queryGroupInfo() {
     const conditionQuery = new ConditionalQuery();
+
     const data = await this.query(
-      conditionQuery.getQueryString(this.tableName)
+      conditionQuery.getQueryString(this.tableName, SQL_OPERATOR.QUERY, {
+        tableName: "page_info",
+        foreignKey: "groupId",
+        queryAttrs: [{ key: "pageCount", condition: "count(*)" }],
+      })
     );
     return data;
   }

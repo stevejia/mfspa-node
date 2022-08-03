@@ -7,7 +7,7 @@ class Mapper<T> extends Transaction {
     super();
     this.tableName = tableName;
   }
-  async query(queryString: string) {
+  async query<T>(queryString: string): Promise<T> {
     console.log(queryString);
     const result = await this.begin("query", queryString);
     console.log(result);
@@ -67,6 +67,12 @@ interface ConditionalQueryModel {
   getQueryString: (tableName: string) => string;
 }
 
+interface JoinQueryModel {
+  tableName: string;
+  foreignKey: string;
+  queryAttrs: { key: string; condition: string }[];
+}
+
 class ConditionalQuery implements ConditionalQueryModel {
   conditions: Array<ConditionalItem> = [];
   constructor(conditions?: Array<ConditionalItem>) {
@@ -87,13 +93,25 @@ class ConditionalQuery implements ConditionalQueryModel {
     }
   }
 
-  getQueryString(tableName: string, operator = SQL_OPERATOR.QUERY) {
+  getQueryString(
+    tableName: string,
+    operator = SQL_OPERATOR.QUERY,
+    joinQuery?: JoinQueryModel
+  ) {
     //默认查询
     let queryStr = `select * from ${tableName}`;
     //如果是删除动作
     if (operator === SQL_OPERATOR.DELETE) {
       queryStr = `delete from ${tableName}`;
     }
+
+    if (joinQuery) {
+      const { tableName: linkTableName, foreignKey, queryAttrs } = joinQuery;
+      //TODO::
+      const [attr] = queryAttrs;
+      queryStr = `select *, (select ${attr.condition} from ${linkTableName} as a where a.${foreignKey} = b.${foreignKey}) as ${attr.key} from ${tableName} as b`;
+    }
+
     const conditionsArr: string[] = [];
     this.conditions.forEach((condition) => {
       conditionsArr.push(this.getConditionString(condition));
