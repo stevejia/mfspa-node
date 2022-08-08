@@ -10,6 +10,12 @@ router.get("/get", async (req, res) => {
   const treeNodes = getTreeNodes(menuList);
   res.send(jsonResult({ menuList, treeNodes }));
 });
+
+router.get("/getmenus", async (req, res) => {
+  const menuList = await menuInfoService.queryMenus();
+  res.send(jsonResult({ menuList }));
+});
+
 router.delete("/delete", async (req, res) => {
   let { query: MenuInfo } = url.parse(req.url, true);
   await menuInfoService.deleteMenuInfo(MenuInfo);

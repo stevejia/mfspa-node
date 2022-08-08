@@ -14,6 +14,8 @@ interface MenuPageModel {
   menuId: number;
   pageId: number;
   pageUrl: string;
+  checked: boolean;
+  isDefault: boolean;
 }
 
 export default MenuInfoModel;
