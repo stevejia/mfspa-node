@@ -5,6 +5,7 @@ interface MenuInfoModel {
   remark: string;
   pId?: number;
   pName?: string;
+  priority?: number;
 }
 
 interface MenuPageModel {

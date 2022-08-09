@@ -26,19 +26,50 @@ class Mapper<T> extends Transaction {
 
   getInsUpdateString(insertItems: Array<T>, tableName: string) {
     //获取属性名称
-    let keys: string[] = [];
-    let values: Array<Array<any>> = [];
-    insertItems.map((item: T) => {
-      keys = Object.keys(item);
-      let itemValues = Object.values(item);
-      values.push(itemValues);
-    });
+    let keys: string[] = this.getKeys(insertItems);
+    let values: Array<Array<any>> = this.getValues(keys, insertItems);
+
     const queryString = `insert into ${tableName}(${keys.join(
       ","
     )}) values ? on duplicate key update ${keys
       .map((key) => `${key} = values(${key})`)
       .join(", ")} `;
     return [queryString, [values]];
+  }
+
+  private getValues(keys: string[], items: Array<any>) {
+    const values: Array<Array<any>> = [];
+    items.forEach((item) => {
+      const itemValues = this.getValue(keys, item);
+      values.push(itemValues);
+    });
+    return values;
+  }
+
+  getValue(keys: string[], item: any) {
+    const value: any[] = [];
+    keys.forEach((key) => {
+      value.push(item[key]);
+    });
+    return value;
+  }
+
+  getKeys(insertItems: Array<T>) {
+    let keys: Array<any> = [];
+    insertItems.forEach((item: T) => {
+      keys = this.uniq(...keys, ...Object.keys(item));
+    });
+    return keys;
+  }
+
+  uniq(...arr: Array<any>) {
+    const uniqArr: Array<any> = [];
+    arr.forEach((item) => {
+      if (uniqArr.indexOf(item) === -1) {
+        uniqArr.push(item);
+      }
+    });
+    return uniqArr;
   }
 
   async delete(queryString: string) {

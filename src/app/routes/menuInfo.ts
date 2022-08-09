@@ -23,8 +23,12 @@ router.delete("/delete", async (req, res) => {
 });
 
 router.post("/update", async (req, res) => {
-  const MenuInfo = req.body;
-  await menuInfoService.insertOrUpdate(MenuInfo);
+  // const { menuData } = req.body;
+  const body = req.body;
+  const params = {} as any;
+  getParams(body, params);
+  
+  await menuInfoService.insertOrUpdate(params.menuData);
   res.send(jsonResult());
 });
 
@@ -36,6 +40,22 @@ router.get("/getpages", async (req, res) => {
 router.post("/updatepages", async (req, res) => {
   const body = req.body;
   const params = {} as any;
+  getParams(body, params);
+  console.log(params);
+  await menuInfoService.insertOrUpdate(params.menuPages, "menu_page");
+  res.send(jsonResult());
+});
+
+interface TreeNode {
+  title?: string;
+  icon?: string;
+  key: number;
+  children: TreeNode[];
+  level: number;
+  isLeaf?: boolean;
+}
+
+const getParams = (body: any, params: any) => {
   Object.keys(body).forEach((key) => {
     const keys = key.replace(/\[/g, ".[").split(".");
     let item = params;
@@ -57,21 +77,17 @@ router.post("/updatepages", async (req, res) => {
       }
     }
   });
-  console.log(params);
-  await menuInfoService.insertOrUpdate(params.menuPages, "menu_page");
-  res.send(jsonResult());
-});
-
-interface TreeNode {
-  title?: string;
-  icon?: string;
-  key: number;
-  children: TreeNode[];
-  level: number;
-  isLeaf?: boolean;
-}
+};
 
 const getTreeNodes = (menuList: MenuInfoModel[]) => {
+  menuList = menuList.sort((a, b) => {
+    const { priority: ap = 0, pId: am = 0 } = a;
+    const { priority: bp = 0, pId: bm = 0 } = b;
+    if (bm === am) {
+      return bp - ap;
+    }
+    return bm - am;
+  });
   const firstNodes = menuList.filter((menu) => !menu.pId);
   const treeNodes: TreeNode[] = [];
   _getTreeNodes(treeNodes, firstNodes, menuList, 1);

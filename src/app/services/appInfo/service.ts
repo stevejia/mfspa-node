@@ -36,6 +36,11 @@ class AppInfoService extends Mapper<AppInfoModel> {
     const results = await this.queryAppInfo(query);
     return results?.[0] || null;
   }
+
+  async getAppList(query: AppInfoQuery) {
+    const appList = await this.queryAppInfo(query);
+    return appList || [];
+  }
 }
 
 export default AppInfoService;
