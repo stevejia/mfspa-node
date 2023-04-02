@@ -19,16 +19,19 @@ router.get("/list", async (req, res) => {
 
 router.post("/update", async (req, res) => {
   const articleInfo = req.body;
-  await articleInfoService.insertOrUpdate(articleInfo).catch((reason: any) => {
+  try {
+    await articleInfoService.insertOrUpdate(articleInfo);
+  } catch (reason) {
     res.send(reason);
-  });
+    return;
+  }
   res.send(jsonResult(null, null, 0));
 });
 
 router.delete("/delete", async (req, res) => {
-    let { query: article_info } = url.parse(req.url, true);
-    await articleInfoService.delete(article_info);
-    res.send(jsonResult());
-  });
+  let { query: article_info } = url.parse(req.url, true);
+  await articleInfoService.delete(article_info);
+  res.send(jsonResult());
+});
 
 export default router;

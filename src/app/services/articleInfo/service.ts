@@ -9,7 +9,7 @@ class ArticleInfoService extends Mapper<ArticleInfoModel> {
     super(table_name);
   }
   async queryArticleInfo(
-    query: ArticleInfoQuery
+    query?: ArticleInfoQuery
   ): Promise<Array<ArticleInfoModel>> {
     const conditionQuery = new ConditionalQuery();
     conditionQuery.addCondition(

@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { menuInfoService } from "../services";
+import { menuInfoService, articleInfoService } from "../services";
 import MenuInfoModel from "../services/menuInfo/model";
 import jsonResult from "./utils/result";
 const url = require("url");
@@ -13,6 +13,20 @@ router.get("/get", async (req, res) => {
 
 router.get("/getmenus", async (req, res) => {
   const menuList = await menuInfoService.queryMenus();
+  const articles = await articleInfoService.queryArticleInfo();
+  menuList.forEach(menu => {
+    if(menu.name === "前端梳理") {
+      let allCount = 0;
+      menu.subMenus?.forEach(sm=> {
+        let smArtCount = articles.filter(art=> art.tag === +sm.key)?.length || 0;
+        allCount += smArtCount;
+        sm.articleCount = smArtCount;
+        sm.name += `(共${smArtCount}篇)`
+      });
+      menu.articleCount = allCount;
+      menu.name += `(共${allCount}篇)`
+    }
+  })
   res.send(jsonResult({ menuList }));
 });
 

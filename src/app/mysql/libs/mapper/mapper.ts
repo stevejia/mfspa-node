@@ -19,9 +19,7 @@ class Mapper<T> extends Transaction {
       insertItems,
       tableName || this.tableName
     );
-    console.log(insertQuery);
-    const result = await this.begin("query", ...insertQuery);
-    console.log(result);
+    await this.begin("query", ...insertQuery);
   }
 
   getInsUpdateString(insertItems: Array<T>, tableName: string) {
@@ -57,7 +55,7 @@ class Mapper<T> extends Transaction {
   getKeys(insertItems: Array<T>) {
     let keys: Array<any> = [];
     insertItems.forEach((item: T) => {
-      keys = this.uniq(...keys, ...Object.keys(item));
+      keys = this.uniq(...keys, ...Object.keys(item as Object));
     });
     return keys;
   }

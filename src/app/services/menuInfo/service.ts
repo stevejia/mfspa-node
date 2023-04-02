@@ -11,6 +11,7 @@ interface MenuItem {
   url?: string;
   relatedUrls?: string[];
   subMenus?: MenuItem[];
+  articleCount?: number;
 }
 
 class MenuInfoService extends Mapper<MenuInfoModel> {
