@@ -5,7 +5,8 @@ import jsonResult from "./utils/result";
 const url = require("url");
 const router = Router();
 router.get("/get", async (req, res) => {
-  const pageList = await pageInfoService.queryPageInfo();
+  let { query } = url.parse(req.url, true);
+  const pageList = await pageInfoService.queryPageInfo(query);
   res.send(jsonResult({ pageList }));
 });
 router.delete("/delete", async (req, res) => {

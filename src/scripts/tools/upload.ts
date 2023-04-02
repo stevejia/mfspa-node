@@ -1,8 +1,8 @@
 import { resolve } from "path";
 
-const fs = require("fs");
-
-const path = require("path");
+import * as fs from 'fs';
+import * as path from "path";
+// const path = require("path");
 const JSZip = require("jszip");
 const FormData = require("form-data");
 const request = require("request");

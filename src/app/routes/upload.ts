@@ -1,8 +1,8 @@
-import compressing from "compressing";
+import * as compressing from "compressing";
 // const compressing = require("compressing");
 import { Router } from "express";
 import jsonResult from "./utils/result";
-import fs from "fs";
+import * as fs from "fs";
 // const fs = require("fs");
 // import multiparty from "multiparty";
 const multiparty = require("multiparty");
@@ -12,9 +12,11 @@ const router = Router();
 
 const cwd = process.cwd();
 // const zlib = require("zlib");
-import zlib, { unzip } from "zlib";
-import { ReadStream } from "fs";
-import stream, { Readable } from "stream";
+// import zlib, { unzip } from "zlib";
+// import { ReadStream } from "fs";
+import * as stream from 'stream';
+const Readable = stream.Readable;
+// import stream, { Readable } from "stream";
 router.post("/server/upload", (req, res) => {
   upload(req, res);
 });
